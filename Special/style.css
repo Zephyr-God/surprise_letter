@@ -466,7 +466,7 @@ body:has(#letter:not(.hidden)) .envelope-container {
     max-width: 100%;
     min-height: auto;
     height: auto;
-    padding: 16px 14px;
+    padding: 16px 14px 56px; /* extra bottom space for signature */
     border-radius: 14px;
     overflow: auto;       /* scroll content if needed */
   }
@@ -492,9 +492,10 @@ body:has(#letter:not(.hidden)) .envelope-container {
 
   /* Keep signature inside visible area */
   #letter .signature {
-    position: static;
-    display: block;
-    margin-top: 12px;
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    margin: 0;
     text-align: right;
   }
 }
