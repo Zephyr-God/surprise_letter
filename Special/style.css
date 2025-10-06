@@ -332,7 +332,8 @@ body:has(#letter:not(.hidden)) .envelope-container {
   transform: translateX(-50%) translateY(0);
   width: 200px;
   height: 140px;
-  background: white;
+  background: #efe4ff; /* light purplish */
+  border: 1px solid rgba(168, 85, 247, 0.25); /* subtle purple border */
   border-radius: 6px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   opacity: 0;
