@@ -1,0 +1,455 @@
+/* Adjustable dimensions */
+:root {
+  /* Fine-tune the final letter height here */
+  --letter-min-height: 500px;
+}
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #fff0f5; /* light pink */
+  margin: 0;
+  padding: 0;
+}
+
+/* Envelope container */
+.envelope-container {
+  position: fixed;
+  top: var(--envelope-top, 50%);
+  left: var(--envelope-left, 50%);
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  cursor: grab;
+}
+
+img.envelope {
+  display: none;
+}
+
+.kitty {
+  width: 150px;
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.speech-bubble {
+  margin-top: 10px;
+  display: block;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px gray;
+  position: relative;
+  z-index: 5; /* above flap and pocket overlays */
+}
+
+button {
+  margin-top: 15px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px 20px;
+  background: #ff4d6d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  z-index: 5; /* above flap and pocket overlays */
+}
+
+/* Hidden utility: must override any display on components */
+.hidden {
+  display: none !important;
+}
+
+/* Keep #letter mountable for smooth animations */
+#letter.hidden {
+  display: flex !important;     /* override .hidden */
+  opacity: 0;
+  transform: translateY(12px) scale(0.985);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+/* Letter overlay (full screen with 30px margin) */
+#letter {
+  position: fixed;
+  top: -15px;
+  left: -15px;
+  right: -15px;
+  bottom: -40px;
+  margin: 0;
+  background: #cf97a7;
+  border-radius: 12px;
+  box-shadow: 5px 8px 18px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 24px 28px;
+  box-sizing: border-box;
+  font-family: 'Indie Flower', cursive;
+  font-size: 20px;
+  z-index: 2000;            /* above the envelope */
+  opacity: 0;               /* fade in */
+  transform: translateY(12px) scale(0.985);  /* subtle lift-in */
+  filter: blur(2px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform, filter;
+  overflow: auto;
+}
+
+/* Close (X) circular button on the letter overlay */
+#letter .close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #ffffff;
+  color: #e0243a;
+  font-size: 22px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  cursor: pointer;
+  z-index: 2100; /* above overlay contents */
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+}
+
+#letter .close-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+#letter .close-btn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Keyboard focus style */
+#letter .close-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(232, 84, 128, 0.25), 0 6px 14px rgba(0,0,0,0.2);
+}
+
+/* When revealed (hidden removed) */
+#letter:not(.hidden) {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+/* Smooth entrance for overlay content */
+#letter h2,
+#letter .handwritten {
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(1px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform, filter;
+}
+
+#letter:not(.hidden) h2 {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  transition-delay: 0.10s;
+}
+
+#letter:not(.hidden) .handwritten {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  transition-delay: 0.20s;
+}
+
+/* Dim (and hide) everything behind when overlay is active */
+body:has(#letter:not(.hidden)) .envelope-container {
+  opacity: 0;
+  filter: blur(2px) saturate(0.9);
+  transform: translate(-50%, -50%) scale(0.98);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none; /* prevent interaction with background */
+}
+
+/* Ensure placeholder real message never appears */
+#realMsg {
+  display: none !important;
+}
+
+.flashcards {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.card {
+  background: rgb(232, 191, 197);
+  padding: 20px;
+  border: 1px solid #ccc;
+  width: 100px;
+  height: 150px;
+  border-radius: 10px;
+  box-shadow: 3px 3px 6px gray;
+}
+
+/* Envelope open + letter slide animation */
+.envelope-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-top: 0;
+  width: 250px;
+  padding-top: 160px;
+  perspective: 800px;
+}
+
+/* Draw envelope with CSS */
+.envelope-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 160px;
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.envelope-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 125px solid transparent;
+  border-right: 125px solid transparent;
+  border-top: 90px solid #e0243a; /* inverted triangle (points down) */
+  transform: translateX(-50%);
+  transform-origin: top center;
+  transition: transform 0.8s ease;
+  backface-visibility: hidden;
+  z-index: 4;
+  filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.3));
+  pointer-events: none; /* ensure flap doesn't block clicks */
+}
+
+/* Pink heart at flap tip */
+.flap-heart {
+  position: absolute;
+  top: 84px; /* near the flap tip (triangle height is 90px) */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6; /* above the flap */
+  pointer-events: auto; /* allow hover/click to feel like a button */
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  border-radius: 9999px;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15), inset 0 -2px 0 rgba(0,0,0,0.05);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 1;
+  transition: opacity 0.8s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.flap-heart::before {
+  content: "❤️";
+  font-size: 18px;
+  display: block;
+}
+
+/* Hover/active states to mimic button press */
+.flap-heart:hover {
+  transform: translateX(-50%) translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2), inset 0 -2px 0 rgba(0,0,0,0.05);
+}
+.flap-heart:active {
+  transform: translateX(-50%) translateY(1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2), inset 0 2px 0 rgba(0,0,0,0.06);
+}
+
+/* When opening, fade the heart out with the flap */
+.envelope-wrapper.open .flap-heart {
+  opacity: 0;
+}
+
+/* Front pocket overlay to mask the letter while inside */
+.envelope-front {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px; /* pocket height */
+  background: #ffffff;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Open state: flip the flap */
+.envelope-wrapper:has(#envelopeImg.open-envelope)::after,
+.envelope-wrapper.open::after {
+  transform: translateX(-50%) rotateX(180deg);
+}
+
+.envelope {
+  display: block;
+  margin: 0 auto;
+  width: 250px;
+}
+
+/* The letter inside */
+.letter {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  width: 200px;
+  height: 140px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  opacity: 0;
+  transition: all 1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  z-index: 2; /* start behind the pocket overlay */
+  pointer-events: none; /* avoid blocking clicks while hidden */
+}
+
+/* Animation classes we’ll trigger with JS */
+/* Envelope open handled by .envelope-wrapper:has(#envelopeImg.open-envelope) */
+
+.slide-letter {
+  transform: translateX(-50%) translateY(-130%);
+  opacity: 1;
+}
+
+.hellokitty {
+  position: absolute;
+  right: -58px;              /* keep current position */
+  bottom: 214px;             /* keep current position */
+  width: 90px;               /* control her size */
+  opacity: 0;                /* hidden at first */
+  transform: translateY(30px); /* start slightly lower */
+  animation: popUp 0.8s ease-out 1s forwards; /* delay + appear */
+  pointer-events: none;      /* avoids interfering with clicks */
+  z-index: 3;                /* appears above envelope, below letter */
+}
+
+@keyframes popUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) rotate(-5deg);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(-5px) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+
+/* ===== Final Letter Section Theme ===== */
+#letter {
+  background: linear-gradient(145deg, #ffdbe8 0%, #fff5f8 50%, #ffeef3 100%);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(255, 182, 193, 0.4);
+  padding: 3rem 2.5rem;
+  max-width: 700px;
+  margin: 5rem auto;
+  min-height: var(--letter-min-height); /* adjustable height */
+  transition: all 1s ease;
+  transform: perspective(800px) rotateX(0deg);
+  font-family: "Dancing Script", cursive;
+  color: #444;
+  border: 1px solid rgba(255, 192, 203, 0.5);
+  position: relative; /* allow absolute-positioned signature */
+}
+
+/* Quick tuning utility classes (optional) */
+#letter.letter-height-s { --letter-min-height: 340px; }
+#letter.letter-height-m { --letter-min-height: 420px; }
+#letter.letter-height-l { --letter-min-height: 540px; }
+
+#letter.visible {
+  opacity: 1;
+  transform: perspective(800px) rotateX(0deg) translateY(0);
+}
+
+#letter h2 {
+  color: #e75480;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+#letter .handwritten {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  color: #555;
+  text-align: justify;
+  white-space: pre-line;
+}
+
+/* Signature in lower-right of final letter */
+#letter .signature {
+  position: absolute;
+  right: 1.1rem;
+  bottom: -4.0rem; /* lowered closer to bottom */
+  text-align: right;
+  color: #e75480; /* match heading color */
+  font-family: "Dancing Script", cursive;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  white-space: pre-line; /* respect line breaks in HTML */
+}
+
+/* === Letter header styling === */
+#letter h2 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 42px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ff5fa2, #ffc2e0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+#introMsg {
+  font-size: 16px;
+}
+

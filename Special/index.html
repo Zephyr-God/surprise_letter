@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Special Surprise</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <!-- Envelope Popup -->
+   
+  <div class="envelope-container">
+  <div class="envelope-wrapper">
+        <div class="speech-bubble">Open it for surprise ✨</div>
+    <button id="readBtn">Read</button>
+    <div class="letter" id="letterInside">
+      <p id="introMsg">❤️..A letter for you 💌..❤️</p>
+      <p id="realMsg" class="hidden">Hey there... [your actual letter text here]</p>
+      
+    </div>
+    <div class="flap-heart" aria-hidden="true"></div>
+    <div class="envelope-front"></div>
+
+    <!-- 👇 Add Hello Kitty here -->
+    <img src="images/hellokitty.png" alt="Hello Kitty" class="hellokitty">
+  </div>
+</div>
+
+
+  <!-- Letter Section -->
+  <section id="letter" class="hidden">
+    <button id="closeOverlay" class="close-btn" aria-label="Close letter" role="button" tabindex="0">✕</button>
+    <h2>To my Kuchu Puchu Pyaari si Rasmalai</h2>
+    <p class="handwritten">
+      There's nothing special today but every day with you feels special... so I thought I'd write this as a reminder for how you changed my life. You made passing days feel like moments worth keeping. I don’t overthink things anymore- I just feel them, because of you. You’ve turned my silence into warmth, my random thoughts into smiles, and my days into something I actually look forward to. You’re not just a part of my life… you’re the best part
+    </p>
+    <p class="signature">With all my love💕,
+  Yours sincerely
+  Mr. Thakur</p>
+  </section>
+
+  <!-- Surprises Section -->
+  <section id="surprises" class="hidden">
+    <h2>🎁 Here are a few surprises for you</h2>
+    <div class="flashcards">
+      <div class="card">Flashcard 1</div>
+      <div class="card">Flashcard 2</div>
+      <div class="card">Flashcard 3</div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

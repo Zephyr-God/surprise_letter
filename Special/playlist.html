@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playlist for you</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --neon1: #00e5ff; --neon2: #007cf0; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #ffdbe8 0%, #fff5f8 50%, #ffeef3 100%);
+      font-family: 'Dancing Script', cursive;
+      opacity: 0;
+      animation: pageFade 1400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes pageFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .wrap {
+      width: min(1100px, 94vw);
+      background: #ffffffcc;
+      border: 1px solid rgba(255, 192, 203, 0.5);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(255, 182, 193, 0.35);
+      padding: 28px 26px 34px;
+      text-align: center;
+    }
+    h1 {
+      font-size: clamp(38px, 6.6vw, 64px);
+      margin: 0 0 18px;
+      background: linear-gradient(90deg, var(--neon1), var(--neon2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    @media (max-width: 820px) {
+      /* Horizontal scroll on mobile */
+      .grid {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 14px;
+        padding: 6px 8px 12px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;          /* Firefox */
+        -ms-overflow-style: none;       /* IE/Edge */
+      }
+      .grid::-webkit-scrollbar { display: none; } /* WebKit */
+      .pl-card {
+        flex: 0 0 auto;
+        min-width: 78%;
+        max-width: 78%;
+        scroll-snap-align: center;
+      }
+    }
+
+    .pl-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 4 / 3;
+      border-radius: 16px;
+      background: #000; /* fallback behind image */
+      color: #fff;
+      box-shadow: 0 16px 42px rgba(0, 124, 240, 0.32);
+      text-decoration: none;
+      transition: transform .15s ease, box-shadow .15s ease;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      position: relative;
+      overflow: hidden;
+    }
+    .pl-card::after { /* overlay for readability */
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.45));
+      z-index: 1;
+    }
+    .pl-card .pl-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      filter: saturate(1.05);
+      transform: scale(1.02);
+    }
+    /* Slight zoom-out for cards 1 and 3 */
+    .grid .pl-card:nth-child(1) .pl-img { transform: scale(1); }
+    .grid .pl-card:nth-child(3) .pl-img { transform: scale(0.99); }
+    .pl-card:nth-child(1) { animation-delay: 0.1s; }
+    .pl-card:nth-child(2) { animation-delay: 0.7s; }
+    .pl-card:nth-child(3) { animation-delay: 1.3s; }
+
+    @keyframes reveal { to { opacity: 1; transform: translateY(0); } }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #e0f7ff; /* light neon blue */
+      border: 1px solid rgba(0, 124, 240, 0.24);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.14);
+      font-size: 26px;
+      line-height: 1;
+      margin-bottom: 10px;
+      transition: transform .15s ease, box-shadow .15s ease;
+      z-index: 2; /* above overlay */
+    }
+    .pl-card:hover .icon-btn { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.18); }
+    .label { font-size: 22px; position: relative; z-index: 2; }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 26px;
+      text-decoration: none;
+      color: #000;
+      font-size: 18px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-weight: 500;
+    }
+    /* Icon as a control: pointer + playing state */
+    .icon-btn { cursor: pointer; }
+    .icon-btn.playing { box-shadow: 0 12px 28px rgba(0,0,0,0.22), 0 0 0 4px rgba(0,124,240,0.18) inset; transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+  <main class="wrap" role="main">
+    <h1>Playlist for you my love</h1>
+    <section class="grid" aria-label="Playlist cards">
+      <a class="pl-card" href="#track1" title="Open playlist 1">
+        <img class="pl-img" src="Images/playlist1.jpg" alt="Playlist 1 cover" />
+        <span class="icon-btn" aria-hidden="true">🎵</span>
+        <span class="label">Dil Ka Jo Haal Hai</span>
+      </a>
+      <a class="pl-card" href="#track2" title="Open playlist 2">
+        <img class="pl-img" src="Images/playlist2.jpg" alt="Playlist 2 cover" />
+        <span class="icon-btn" aria-hidden="true">🎶</span>
+        <span class="label">If the World was Ending</span>
+      </a>
+      <a class="pl-card" href="#track3" title="Open playlist 3">
+        <img class="pl-img" src="Images/playlist3.jpg" alt="Playlist 3 cover" />
+        <span class="icon-btn" aria-hidden="true">🎧</span>
+        <span class="label">Little Bit More</span>
+      </a>
+    </section>
+    <a class="back-link" href="huiiii.html">← Back</a>
+  </main>
+  <script>
+    (function(){
+      // Define segment-controlled audios per card
+      const configs = [
+        { cardIndex: 0, src: 'Images/DKJHH.mp3', start: 40, end: 74 },    // Dil Ka Jo Haal Hai
+        { cardIndex: 1, src: 'Images/ITWWE.mp3', start: 34, end: 71 },    // If the World was Ending
+        { cardIndex: 2, src: 'Images/LBM.mp3',   start: 32, end: 64 },    // Little Bit More
+      ];
+
+      const cards = Array.from(document.querySelectorAll('.pl-card'));
+      const players = [];
+      let current = null; // currently playing player
+
+      function makePlayer(cfg){
+        const card = cards[cfg.cardIndex];
+        if (!card) return null;
+        const btn = card.querySelector('.icon-btn');
+        if (!btn) return null;
+
+        const audio = new Audio(cfg.src);
+        audio.preload = 'auto';
+        let endTimer = null;
+
+        function updateUI(isPlaying){ btn.classList.toggle('playing', !!isPlaying); }
+        function stopEndCheck(){ if (endTimer) { clearInterval(endTimer); endTimer = null; } }
+        function startEndCheck(){ stopEndCheck(); endTimer = setInterval(()=>{
+          if (audio.currentTime >= cfg.end) {
+            audio.pause();
+            try { audio.currentTime = cfg.start; } catch(e) {}
+            updateUI(false);
+            stopEndCheck();
+            current = null;
+          }
+        }, 120); }
+
+        function playSegment(){
+          const ensure = () => {
+            try { audio.currentTime = cfg.start; } catch(e) {}
+            audio.play().then(()=>{ updateUI(true); startEndCheck(); }).catch(()=>{});
+          };
+          if (audio.readyState < 1) {
+            audio.addEventListener('loadedmetadata', ensure, { once: true });
+            audio.load();
+          } else { ensure(); }
+        }
+
+        function pause(){ audio.pause(); updateUI(false); stopEndCheck(); }
+
+        function toggle(e){
+          e.preventDefault(); e.stopPropagation();
+          // Pause any other player
+          if (current && current !== api) { current.pause(); }
+          if (audio.paused) { current = api; playSegment(); }
+          else { pause(); current = null; }
+        }
+
+        btn.addEventListener('click', toggle);
+        window.addEventListener('pagehide', ()=>{ pause(); });
+
+        const api = { pause };
+        return api;
+      }
+
+      configs.forEach(cfg => {
+        const p = makePlayer(cfg);
+        if (p) players.push(p);
+      });
+    })();
+  </script>
+</body>
+</html>

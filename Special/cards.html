@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cards for you</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --pink: #e281b1; --purple: #a855f7; --white: #fff; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #ffdbe8 0%, #fff5f8 50%, #ffeef3 100%);
+      /* Apply requested font with sensible fallbacks */
+      font-family: 'Feyora', 'Dancing Script', cursive;
+      /* Fade-in on load */
+      opacity: 0;
+      animation: pageFade 1400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .wrap {
+      width: min(1000px, 94vw);
+      background: #ffffffcc;
+      border: 1px solid rgba(255, 192, 203, 0.5);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(255, 182, 193, 0.35);
+      padding: 28px 24px 34px;
+      text-align: center;
+    }
+    h1 {
+      margin: 6px 0 20px;
+      font-size: clamp(38px, 6vw, 64px);
+      background: linear-gradient(90deg, #ff5fa2, #a855f7);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+    .grid {
+      display: flex;               /* vertical stack */
+      flex-direction: column;
+      gap: 18px;                   /* space between cards */
+      align-items: center;
+    }
+
+    /* Flip card */
+    .flip-card {
+      width: min(720px, 92vw);  /* allow wider for longer text */
+      /* height will be set dynamically via JS to fit tallest face */
+      perspective: 1000px;
+      cursor: pointer;
+      opacity: 0;                  /* start hidden for reveal */
+      transform: translateY(8px);
+      animation: reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    /* Progressive reveal delays */
+    .grid .flip-card:nth-child(1) { animation-delay: 0s; }
+    .grid .flip-card:nth-child(2) { animation-delay: 1.2s; }
+    .grid .flip-card:nth-child(3) { animation-delay: 2.4s; }
+
+    @keyframes reveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Page fade-in */
+    @keyframes pageFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.15);
+      backface-visibility: hidden;
+      font-family: 'Feyora', 'Dancing Script', cursive;
+      font-size: clamp(18px, 2.4vw, 26px);
+      line-height: 1.35;
+      padding: 20px 22px; /* give breathing room for text */
+      color: #ffffff;
+      user-select: none;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+    .flip-face.front { background: linear-gradient(135deg, #ff5fa2, #a855f7); }
+    .flip-face.back  { background: linear-gradient(135deg, #34d399, #059669); transform: rotateY(180deg); }
+
+    /* Per-card color themes (override defaults) */
+    /* Card 1: background #f3ddeb, accent #bfd7ea, text #2d2d2d */
+    .grid .flip-card:nth-child(1) .flip-face { color: #2d2d2d; }
+    .grid .flip-card:nth-child(1) .flip-face.front { background: linear-gradient(135deg, #f3ddeb, #bfd7ea); }
+    .grid .flip-card:nth-child(1) .flip-face.back  { background: linear-gradient(135deg, #bfd7ea, #f3ddeb); }
+
+    /* Card 2: background #e8c2ca, accent #a8c0e8, text #2b2b2b */
+    .grid .flip-card:nth-child(2) .flip-face { color: #2b2b2b; }
+    .grid .flip-card:nth-child(2) .flip-face.front { background: linear-gradient(135deg, #e8c2ca, #a8c0e8); }
+    .grid .flip-card:nth-child(2) .flip-face.back  { background: linear-gradient(135deg, #a8c0e8, #e8c2ca); }
+
+    /* Card 3: background #d9e7f2, accent #eab5c2, text #2e2e2e */
+    .grid .flip-card:nth-child(3) .flip-face { color: #2e2e2e; }
+    .grid .flip-card:nth-child(3) .flip-face.front { background: linear-gradient(135deg, #d9e7f2, #eab5c2); }
+    .grid .flip-card:nth-child(3) .flip-face.back  { background: linear-gradient(135deg, #eab5c2, #d9e7f2); }
+    
+    /* Hint under cards */
+    .note-hint {
+      margin-top: 8px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-size: 15px;
+      color: #444;
+    }
+
+    /* Back link spacing */
+    .back-link {
+      display: inline-block;
+      margin-top: 36px; /* increase spacing from cards */
+      text-decoration: none;
+      color: #e0243a;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" role="main">
+    <h1>Some heartfelt notes for you</h1>
+    <section class="grid" aria-label="Flip card grid">
+      <div class="flip-card" tabindex="0" role="button" aria-label="Flip card 1">
+        <div class="flip-card-inner">
+          <div class="flip-face front">You're literally everything I've ever asked for from god</div>
+          <div class="flip-face back">You're the answer of my unheard prayers my Love</div>
+        </div>
+      </div>
+      <div class="flip-card" tabindex="0" role="button" aria-label="Flip card 2">
+        <div class="flip-card-inner">
+          <div class="flip-face front">Just the thought that you're mine puts a smile on my face</div>
+          <div class="flip-face back">Because in a world full of chaos, you’re the one thing that feels like peace... you’re my calm, my safe place, my person</div>
+        </div>
+      </div>
+      <div class="flip-card" tabindex="0" role="button" aria-label="Flip card 3">
+        <div class="flip-card-inner">
+          <div class="flip-face front">I Loveeeeee you</div>
+          <div class="flip-face back">More than words could ever explain, more than even I ever thought I could love someone..
+            you’re not just someone I say ‘I love you’ to- you’re the reason I know what love feels like</div>
+        </div>
+      </div>
+      <p class="note-hint">Click on any note to see my love</p>
+    </section>
+    <a class="back-link" href="huiiii.html">← Back</a>
+  </main>
+  <script>
+    // Auto-size cards based on tallest face on load and resize
+    function sizeCards() {
+      document.querySelectorAll('.flip-card').forEach((card) => {
+        const front = card.querySelector('.flip-face.front');
+        const back = card.querySelector('.flip-face.back');
+        // Temporarily allow natural heights to measure
+        const prevFrontPos = front.style.position;
+        const prevBackPos = back.style.position;
+        front.style.position = 'static';
+        back.style.position = 'static';
+        const frontH = front.scrollHeight;
+        const backH = back.scrollHeight;
+        const maxH = Math.max(frontH, backH);
+        // Restore absolute positioning
+        front.style.position = prevFrontPos;
+        back.style.position = prevBackPos;
+        card.style.height = maxH + 'px';
+      });
+    }
+    window.addEventListener('load', sizeCards);
+    window.addEventListener('resize', sizeCards);
+
+    // Soft flip sound using Web Audio API (no external files)
+    let audioCtx;
+    function playFlip() {
+      try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(700, now);
+        osc.frequency.exponentialRampToValueAtTime(300, now + 0.12);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(0.08, now + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      } catch (e) {}
+    }
+
+    // Toggle flip on click and keyboard (Enter/Space), with sound
+    document.querySelectorAll('.flip-card').forEach((card) => {
+      const toggle = () => { card.classList.toggle('flipped'); playFlip(); };
+      card.addEventListener('click', () => { toggle(); sizeCards(); });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); toggle(); sizeCards(); }
+      });
+    });
+  </script>
+</body>
+</html>

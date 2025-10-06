@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Special for you</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #ffdbe8 0%, #fff5f8 50%, #ffeef3 100%);
+      font-family: 'Dancing Script', cursive;
+      color: #e75480;
+      opacity: 0; /* start hidden */
+      animation: pageFade 1400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes pageFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .wrap {
+      width: min(800px, 92vw);
+      background: #ffffffcc;
+      border: 1px solid rgba(255, 192, 203, 0.5);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(255, 182, 193, 0.35);
+      padding: 40px 28px;
+      text-align: center;
+    }
+    h1 {
+      font-size: clamp(40px, 7vw, 68px);
+      margin: 0;
+      background: linear-gradient(90deg, #ff5fa2, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+    .autoplay-note {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-size: 14px;
+      color: #333;
+      text-align: center;
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
+      border-radius: 999px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+      z-index: 1000;
+      animation: noteFade 5.2s ease 0.2s forwards;
+    }
+    @keyframes noteFade {
+      0% { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+      12% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      70% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    .letter-area {
+      margin-top: 18px;
+      min-height: 220px; /* space reserved for letter */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      line-height: 1.9;            /* more comfortable line spacing */
+      white-space: pre-line;       /* respect intentional line breaks */
+      text-align: justify;         /* better paragraph flow */
+      color: #e75480; /* match heading theme */
+      padding: 4px 2px;            /* small breathing room */
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #000000;
+      font-size: 18px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; /* simple font */
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" role="main">
+    <div class="autoplay-note">🎵 click anywhere for song</div>
+    <h1>My sincerest feelings💕</h1>
+    <div class="letter-area">How do I even begin to explain what you mean to me...
+
+      You’re not just someone I love- you’ve become the peace of my mind, the voice that makes everything quiet inside of me. You’re the part of my life that turned ordinary days into something worth remembering for life.
+      
+      You’re the thought behind my silence, the peace in my restlessness, the warmth that follows even my hardest days. When you smile, it feels like everything’s finally right with the world and when you’re low, I feel it too- because my heart feels connected to you.
+      
+      You’ve made me believe that even someone like me deserves love- not the kind that just sounds good, but the kind that feels safe. The way you care, the way you stay, the way you make me laugh when I least expect it… it’s all so real, so rare.
+      
+      Every day, I silently thank god for making you come along my way. You’re not just someone I prayed for- you’re someone my heart somehow always knew was missing.
+      
+      You’re my peace, my person, my ‘finally.</div>
+    <a class="back-link" href="huiiii.html">← Back</a>
+  </main>
+  <!-- Background music: UIFY.mp3 -->
+  <audio id="bgMusic" src="Images/UIFY.mp3" preload="auto" autoplay muted playsinline></audio>
+  <script>
+    // Autoplay muted (allowed), then unmute on first user interaction
+    document.addEventListener('DOMContentLoaded', function(){
+      const audio = document.getElementById('bgMusic');
+      if (!audio) return;
+      audio.muted = true;
+      audio.play().catch(()=>{});
+
+      const resume = () => {
+        audio.muted = false;
+        audio.volume = 0.9;
+        audio.play().catch(()=>{});
+        window.removeEventListener('pointerdown', resume);
+        window.removeEventListener('keydown', resume);
+      };
+      window.addEventListener('pointerdown', resume, { once: true });
+      window.addEventListener('keydown', resume, { once: true });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Huiiii</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #ffdbe8 0%, #fff5f8 50%, #ffeef3 100%);
+      font-family: 'Dancing Script', cursive;
+    }
+    .huiiii-wrap {
+      width: min(900px, 92vw);
+      background: #ecc4d4;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 192, 203, 0.5);
+      border-radius: 18px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                  0 22px 64px rgba(255, 182, 193, 0.55),
+                  0 6px 18px rgba(0, 0, 0, 0.12);
+      padding: 28px 26px 34px;
+      text-align: center;
+    }
+    .huiiii-title {
+      font-size: clamp(42px, 7vw, 72px);
+      font-weight: 700;
+      margin: 6px 0 18px;
+      background: linear-gradient(90deg, #ff5fa2, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+    .card-grid {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column; /* stack vertically */
+      gap: 28px; /* larger spacing between cards */
+    }
+    /* Autoplay note (same as special.html) */
+    .autoplay-note {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-size: 14px;
+      color: #333;
+      text-align: center;
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
+      border-radius: 999px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+      z-index: 1000;
+      animation: noteFade 5.2s ease 0.2s forwards;
+    }
+    @keyframes noteFade {
+      0% { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+      12% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      70% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    .nav-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 150px; /* shorter card height */
+      width: 70%;            /* reduce width */
+      max-width: 240px;      /* cap max width */
+      min-width: 220px;      /* keep reasonable min */
+      align-self: center;    /* center in column */
+      border-radius: 14px;
+      background: #fff;
+      border: none;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+      color: #ffffff;
+      font-size: 22px; /* larger text */
+      text-decoration: none;
+      transition: transform .15s ease, box-shadow .15s ease;
+      opacity: 0;                 /* start hidden */
+      transform: translateY(8px); /* slight offset */
+      animation: reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    /* Only the first card stacks icon above text */
+    .card-grid .nav-card:nth-child(1) {
+      flex-direction: column;
+      gap: 10px;
+    }
+    /* Circular heart icon button */
+    .nav-card .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #efe4ff; /* light purplish */
+      border: 1px solid rgba(168, 85, 247, 0.25); /* subtle purple border */
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+      transition: transform .15s ease, box-shadow .15s ease;
+      font-size: 22px;
+      line-height: 1;
+    }
+    /* Lift effect when hovering the whole card */
+    .card-grid .nav-card:nth-child(1):hover .icon-btn {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.16);
+    }
+    /* Second card layout stacks icon above text */
+    .card-grid .nav-card:nth-child(2) {
+      flex-direction: column;
+      gap: 10px;
+    }
+    /* Light bluish icon button style for 2nd card */
+    .card-grid .nav-card:nth-child(2) .icon-btn {
+      background: #e8f3ff; /* very light blue */
+      border: 1px solid rgba(59, 130, 246, 0.22); /* subtle blue border */
+    }
+    /* Lift effect on 2nd card icon when card hovers */
+    .card-grid .nav-card:nth-child(2):hover .icon-btn {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.16);
+    }
+    /* Third card layout stacks icon above text */
+    .card-grid .nav-card:nth-child(3) {
+      flex-direction: column;
+      gap: 10px;
+    }
+    /* Cream icon button style for 3rd card */
+    .card-grid .nav-card:nth-child(3) .icon-btn {
+      background: #fff5e6; /* cream */
+      border: 1px solid rgba(245, 158, 11, 0.22); /* subtle amber border */
+    }
+    /* Lift effect on 3rd card icon when card hovers */
+    .card-grid .nav-card:nth-child(3):hover .icon-btn {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.16);
+    }
+    /* Per-card color themes */
+    .card-grid .nav-card:nth-child(1) {
+      background: linear-gradient(135deg, #ffffff, #ffffff);
+      color: #e281b1; /* Letter for you */
+    }
+    .card-grid .nav-card:nth-child(2) {
+      background: linear-gradient(135deg, #e281b1, #e281b1);
+      color: #ffffff; /* Special for you */
+      box-shadow: 0 12px 26px rgba(0,0,0,0.22);
+    }
+    .card-grid .nav-card:nth-child(3) {
+      background: linear-gradient(135deg, #050304, #050304);
+      color: #e281b1; /* Cards for you */
+      box-shadow: 0 14px 30px rgba(0,0,0,0.28);
+    }
+    .card-grid .nav-card:nth-child(1) { animation-delay: 0s; }
+    .card-grid .nav-card:nth-child(2) { animation-delay: 1s; }
+    .card-grid .nav-card:nth-child(3) { animation-delay: 2s; }
+    .card-grid .nav-card:nth-child(4) { animation-delay: 3s; }
+
+    @keyframes reveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 18px 30px rgba(0,0,0,0.18);
+    }
+    /* Stronger hover lift for 2nd and 3rd cards */
+    .card-grid .nav-card:nth-child(2):hover {
+      box-shadow: 0 26px 46px rgba(0,0,0,0.28);
+    }
+    .card-grid .nav-card:nth-child(3):hover {
+      box-shadow: 0 30px 56px rgba(0,0,0,0.35);
+    }
+    .nav-card:active { transform: translateY(1px); box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
+
+    /* Fourth card layout stacks icon above text */
+    .card-grid .nav-card:nth-child(4) {
+      flex-direction: column;
+      gap: 10px;
+    }
+    /* Playlist card theme (4th card) */
+    .card-grid .nav-card:nth-child(4) {
+      background: #c8a2c8;
+      color: #ffffff;
+      box-shadow: 0 14px 34px rgba(200, 162, 200, 0.35);
+    }
+    /* Icon button color for 4th card */
+    .card-grid .nav-card:nth-child(4) .icon-btn {
+      background: #f3e9f7; /* very light purple */
+      border: 1px solid rgba(200, 162, 200, 0.28);
+    }
+    /* Lift effect on 4th card icon when card hovers */
+    .card-grid .nav-card:nth-child(4):hover .icon-btn {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.16);
+    }
+  </style>
+</head>
+<body>
+  <main class="huiiii-wrap" role="main">
+    <div class="autoplay-note">🎵 click anywhere for song</div>
+    <h1 class="huiiii-title">Huiiii,</h1>
+    <h1 class="huiiii-title">Meraa Bacchaa...</h1>
+    <section class="card-grid" aria-label="Navigation cards">
+      <a class="nav-card" href="index.html#letter" title="Open the Letter">
+        <span class="icon-btn" aria-hidden="true">❤️</span>
+        <span class="label">Letter for you✨</span>
+      </a>
+      <a class="nav-card" href="special.html" title="Special letter page">
+        <span class="icon-btn" aria-hidden="true">💌</span>
+        <span class="label">Special for you💕</span>
+      </a>
+      <a class="nav-card" href="cards.html" title="Flip cards page">
+        <span class="icon-btn" aria-hidden="true">🎀</span>
+        <span class="label">Little notes from my heart for you</span>
+      </a>
+      <a class="nav-card" href="playlist.html" title="Open the playlist">
+        <span class="icon-btn" aria-hidden="true">🎵</span>
+        <span class="label">Playlist for you</span>
+      </a>
+    </section>
+  </main>
+  <!-- Background music: RFIY.mp3 -->
+  <audio id="bgMusic" src="Images/RFIY.mp3" preload="auto" autoplay muted playsinline></audio>
+  <script>
+    // Autoplay muted (allowed), then unmute on first user interaction
+    document.addEventListener('DOMContentLoaded', function(){
+      const audio = document.getElementById('bgMusic');
+      if (!audio) return;
+      // Try to aggressively preload and start immediately
+      try { audio.load(); } catch(e) {}
+      audio.muted = true;
+      const tryPlay = () => { audio.play().catch(()=>{}); };
+      tryPlay();
+      // Unmute ASAP on first interaction (covering multiple events)
+      const resume = () => {
+        audio.muted = false;
+        audio.volume = 0.9;
+        tryPlay();
+        window.removeEventListener('pointerdown', resume);
+        window.removeEventListener('touchstart', resume);
+        window.removeEventListener('click', resume);
+        window.removeEventListener('keydown', resume);
+      };
+      window.addEventListener('pointerdown', resume, { once: true });
+      window.addEventListener('touchstart', resume, { once: true, passive: true });
+      window.addEventListener('click', resume, { once: true });
+      window.addEventListener('keydown', resume, { once: true });
+      // If enough is buffered, start as soon as possible
+      audio.addEventListener('canplaythrough', () => { if (audio.muted) tryPlay(); }, { once: true });
+    });
+  </script>
+</body>
+</html>
