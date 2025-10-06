@@ -453,3 +453,48 @@ body:has(#letter:not(.hidden)) .envelope-container {
   font-size: 16px;
 }
 
+/* ===== Mobile adjustments for the final letter overlay ===== */
+@media (max-width: 520px) {
+  /* Constrain overlay fully within small screens */
+  #letter {
+    position: fixed;
+    top: max(8px, env(safe-area-inset-top));
+    left: max(8px, env(safe-area-inset-left));
+    right: max(8px, env(safe-area-inset-right));
+    bottom: max(8px, env(safe-area-inset-bottom));
+    margin: 0;
+    max-width: 100%;
+    min-height: auto;
+    height: auto;
+    padding: 16px 14px;
+    border-radius: 14px;
+    overflow: auto;       /* scroll content if needed */
+  }
+
+  /* Close button slightly smaller */
+  #letter .close-btn {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+
+  /* Heading and paragraph sizes */
+  #letter h2 {
+    font-size: 1.6rem;
+    margin-bottom: 0.6rem;
+  }
+  #letter .handwritten {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  /* Keep signature inside visible area */
+  #letter .signature {
+    position: static;
+    display: block;
+    margin-top: 12px;
+    text-align: right;
+  }
+}
