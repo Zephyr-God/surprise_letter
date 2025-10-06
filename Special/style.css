@@ -2,6 +2,8 @@
 :root {
   /* Fine-tune the final letter height here */
   --letter-min-height: 500px;
+  /* Opt out of automatic dark color adjustments */
+  color-scheme: light;
 }
 body {
   font-family: Arial, sans-serif;
@@ -232,7 +234,7 @@ body:has(#letter:not(.hidden)) .envelope-container {
   left: 0;
   width: 100%;
   height: 160px;
-  background: #ffffff;
+  background: #ffffff !important; /* keep white in dark mode */
   border-radius: 6px;
   box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
   z-index: 1;
@@ -307,7 +309,7 @@ body:has(#letter:not(.hidden)) .envelope-container {
   left: 0;
   width: 100%;
   height: 80px; /* pocket height */
-  background: #ffffff;
+  background: transparent !important; /* invisible pocket */
   z-index: 3;
   pointer-events: none;
 }
@@ -337,13 +339,15 @@ body:has(#letter:not(.hidden)) .envelope-container {
   border-radius: 6px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   opacity: 0;
-  transition: all 1s ease;
+  transition: all 1s ease, clip-path 0.6s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
   z-index: 2; /* start behind the pocket overlay */
   pointer-events: none; /* avoid blocking clicks while hidden */
+  /* Clip bottom equal to pocket height so it appears masked while inside */
+  clip-path: inset(0 0 80px 0 round 6px);
 }
 
 /* Animation classes we’ll trigger with JS */
@@ -351,6 +355,8 @@ body:has(#letter:not(.hidden)) .envelope-container {
 
 .slide-letter {
   transform: translateX(-50%) translateY(-130%);
+  /* Unmask when sliding out */
+  clip-path: inset(0 0 0 0 round 6px);
   opacity: 1;
 }
 
